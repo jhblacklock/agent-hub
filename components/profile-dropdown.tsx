@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -10,8 +12,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from './ui/button';
+import { useAuth } from '@/lib/providers/auth-provider';
+import { useRouter } from 'next/navigation';
 
 export function ProfileDropdown() {
+  const { signOut } = useAuth();
+  const router = useRouter();
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +51,7 @@ export function ProfileDropdown() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleSignOut}>
           Log out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

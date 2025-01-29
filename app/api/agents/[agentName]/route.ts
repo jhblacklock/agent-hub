@@ -1,7 +1,7 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import type { TaskData } from '../../../../lib/lib/supabase/types';
+import type { TaskData } from '@/lib/supabase/types';
 
 export async function POST(
   request: Request,

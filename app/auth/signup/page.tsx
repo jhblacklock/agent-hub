@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 
@@ -9,7 +8,6 @@ export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
   const supabase = createClientComponentClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,7 +26,11 @@ export default function SignUpPage() {
       // Show success message or redirect
       alert('Check your email for the confirmation link');
     } catch (error) {
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Something went wrong');
+      }
     }
   };
 

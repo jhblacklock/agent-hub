@@ -17,8 +17,12 @@ export default function LoginPage() {
     try {
       await signIn(email, password);
       router.push('/dashboard');
-    } catch (err) {
-      setError('Invalid credentials');
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Invalid credentials');
+      }
     }
   };
 
@@ -72,7 +76,7 @@ export default function LoginPage() {
             href="/auth/signup"
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
-            Don't have an account? Sign up
+            Don&apos;t have an account? Sign up
           </Link>
         </div>
       </div>

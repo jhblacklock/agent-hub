@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ user: data.user });
   } catch (error) {
     return NextResponse.json(
-      { error: 'Authentication failed' },
+      { error: (error as Error).message || 'Authentication failed' },
       { status: 401 }
     );
   }

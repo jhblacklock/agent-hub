@@ -31,3 +31,36 @@ export type AgentResponse = {
   data?: Record<string, unknown>;
   error?: string;
 };
+
+export type Database = {
+  public: {
+    Tables: {
+      logs: {
+        Row: {
+          id: string;
+          agent_name: string;
+          task: TaskData;
+          result: TaskResult;
+          created_at: string;
+          user_id: string;
+        };
+        Insert: {
+          id?: string;
+          agent_name: string;
+          task: TaskData;
+          result?: TaskResult;
+          created_at?: string;
+          user_id: string;
+        };
+        Update: {
+          id?: string;
+          agent_name?: string;
+          task?: TaskData;
+          result?: TaskResult;
+          created_at?: string;
+          user_id?: string;
+        };
+      };
+    };
+  };
+};

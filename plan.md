@@ -20,127 +20,127 @@ Design and implement a modular **Agent Hub** with the following features:
 
 **Core Components**
 
--  **Agents**: Each agent has its own folder, including its unique logic, configuration, and task handlers. Agents should be self-contained for modularity and scalability.
+- **Agents**: Each agent has its own folder, including its unique logic, configuration, and task handlers. Agents should be self-contained for modularity and scalability.
 
--  **API Layer**: Centralized serverless API endpoints for:
+- **API Layer**: Centralized serverless API endpoints for:
 
--  Routing tasks to agents based on requests.
+- Routing tasks to agents based on requests.
 
--  Logging agent activity in the database.
+- Logging agent activity in the database.
 
--  Managing authentication and enforcing secure interactions.
+- Managing authentication and enforcing secure interactions.
 
--  **Authentication**: Use Supabase to handle user authentication and RBAC. Ensure only authorized users can access the dashboard or trigger API actions.
+- **Authentication**: Use Supabase to handle user authentication and RBAC. Ensure only authorized users can access the dashboard or trigger API actions.
 
--  **Frontend**: A Next.js dashboard that:
+- **Frontend**: A Next.js dashboard that:
 
--  Displays logs of agent activity.
+- Displays logs of agent activity.
 
--  Allows users to trigger tasks manually.
+- Allows users to trigger tasks manually.
 
--  Provides role-specific controls based on authentication.
+- Provides role-specific controls based on authentication.
 
--  **Database**: Use Supabase tables to:
+- **Database**: Use Supabase tables to:
 
--  Store logs of agent task executions.
+- Store logs of agent task executions.
 
--  Manage user data and roles.
+- Manage user data and roles.
 
--  Optionally store agent-specific metadata or configurations.
+- Optionally store agent-specific metadata or configurations.
 
 **File Structure**
 
 Define the following structure for clarity and modularity:
 
--  A folder for each agent under a central agents directory, encapsulating all related logic and configuration.
+- A folder for each agent under a central agents directory, encapsulating all related logic and configuration.
 
--  A folder for API routes to manage backend logic and task orchestration.
+- A folder for API routes to manage backend logic and task orchestration.
 
--  Supabase integration in a db folder, including client initialization and models for logs and user data.
+- Supabase integration in a db folder, including client initialization and models for logs and user data.
 
--  A pages directory for the Next.js frontend, containing dashboard and authentication-related pages.
+- A pages directory for the Next.js frontend, containing dashboard and authentication-related pages.
 
--  A utils directory for reusable utilities like model calls, schedulers, and email handling.
+- A utils directory for reusable utilities like model calls, schedulers, and email handling.
 
 **Supabase Setup**
 
 **Authentication**
 
--  Enable Supabase Auth to support email/password login and optional third-party providers (e.g., Google).
+- Enable Supabase Auth to support email/password login and optional third-party providers (e.g., Google).
 
--  Configure role-based access control (RBAC) to define roles like "admin" and "user."
+- Configure role-based access control (RBAC) to define roles like "admin" and "user."
 
--  Use Supabase session management to ensure secure API access by authorized users only.
+- Use Supabase session management to ensure secure API access by authorized users only.
 
 **Database Tables**
 
 1.  **Logs Table**:
 
--  Columns: id, agent_name, task, result, created_at.
+- Columns: id, agent_name, task, result, created_at.
 
--  Purpose: Store details of all agent task executions.
+- Purpose: Store details of all agent task executions.
 
 2.  **Users Table**:
 
--  Columns: id, email, role, created_at.
+- Columns: id, email, role, created_at.
 
--  Purpose: Manage user data and roles for authentication and RBAC.
+- Purpose: Manage user data and roles for authentication and RBAC.
 
 **Implementation Steps**
 
 1.  **Build Self-Contained Agents**:
 
--  Each agent should include a run function to execute tasks.
+- Each agent should include a run function to execute tasks.
 
--  Modularize logic with subdirectories for tasks, utilities, and configurations.
+- Modularize logic with subdirectories for tasks, utilities, and configurations.
 
 2.  **Create a Centralized API Layer**:
 
--  Define API endpoints to:
+- Define API endpoints to:
 
--  Route tasks to the appropriate agents.
+- Route tasks to the appropriate agents.
 
--  Log task execution details in Supabase.
+- Log task execution details in Supabase.
 
--  Validate user authentication and role permissions before task execution.
+- Validate user authentication and role permissions before task execution.
 
--  Ensure the API acts as a secure intermediary between the frontend and agents.
+- Ensure the API acts as a secure intermediary between the frontend and agents.
 
 3.  **Set Up Supabase Integration**:
 
--  Use Supabase for database and authentication.
+- Use Supabase for database and authentication.
 
--  Store logs of agent activity in a dedicated table.
+- Store logs of agent activity in a dedicated table.
 
--  Ensure only authenticated and authorized users can trigger agents or view logs.
+- Ensure only authenticated and authorized users can trigger agents or view logs.
 
 4.  **Design a Frontend Dashboard**:
 
--  Use Next.js to create a responsive, user-friendly dashboard.
+- Use Next.js to create a responsive, user-friendly dashboard.
 
--  Include features to:
+- Include features to:
 
--  View agent activity logs.
+- View agent activity logs.
 
--  Trigger agent tasks manually.
+- Trigger agent tasks manually.
 
--  Manage users and roles (if required).
+- Manage users and roles (if required).
 
--  Redirect unauthorized users to a login page.
+- Redirect unauthorized users to a login page.
 
 5.  **Add Authentication**:
 
--  Use Supabase Auth for user login and session management.
+- Use Supabase Auth for user login and session management.
 
--  Protect API routes to ensure only authenticated users can interact with agents or fetch logs.
+- Protect API routes to ensure only authenticated users can interact with agents or fetch logs.
 
 6.  **Deploy on Vercel**:
 
--  Push the codebase to GitHub and connect it to Vercel.
+- Push the codebase to GitHub and connect it to Vercel.
 
--  Configure environment variables for Supabase (SUPABASE_URL, SUPABASE_KEY) and any other sensitive data.
+- Configure environment variables for Supabase (SUPABASE_URL, SUPABASE_KEY) and any other sensitive data.
 
--  Test the deployment to ensure smooth functionality across authentication, task orchestration, and frontend interaction.
+- Test the deployment to ensure smooth functionality across authentication, task orchestration, and frontend interaction.
 
 **Deployment Workflow**
 
@@ -154,15 +154,16 @@ Define the following structure for clarity and modularity:
 
 5.  Test the deployment for:
 
--  User login and role-based access.
+- User login and role-based access.
 
--  Task execution by agents.
+- Task execution by agents.
 
--  Logs being stored correctly in Supabase.
+- Logs being stored correctly in Supabase.
 
 ### Prompt
+
 ```
-Read @plan.md and start the build. You are a principle engineer at your startup building this new app for your client. 
+Read @plan.md and start the build. You are a principle engineer at your startup building this new app for your client.
 
 You work smart and systematic. Taking your time to reduce mistakes. If you need any help, as me, I am your product manager.
 ```

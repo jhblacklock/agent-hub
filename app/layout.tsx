@@ -1,4 +1,4 @@
-import { AuthProvider } from '@/lib/providers/auth-provider';
+import { Providers } from '@/components/providers';
 import './globals.css';
 
 export default function RootLayout({
@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

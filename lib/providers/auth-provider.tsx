@@ -2,8 +2,9 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import type { Database } from '@/lib/supabase/types';
+import { useRouter, usePathname } from 'next/navigation';
+import { useSupabase } from './supabase-provider';
+import logger from '@/lib/utils/logger';
 
 interface AuthContextType {
   user: User | null;
@@ -20,70 +21,54 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { supabase, session, isLoading: sessionLoading } = useSupabase();
+  const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const supabase = createClientComponentClient<Database>({
-    supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-  });
 
   useEffect(() => {
-    // Check session on mount
-    const initializeAuth = async () => {
+    if (sessionLoading) {
+      return;
+    }
+
+    if (!session && !pathname.startsWith('/auth')) {
+      logger.info('No session found, redirecting to login', { pathname });
+      router.push('/auth/login');
+      return;
+    }
+
+    setUser(session?.user ?? null);
+    setLoading(false);
+  }, [session, sessionLoading, pathname, router]);
+
+  const value = {
+    user,
+    loading: loading || sessionLoading,
+    signIn: async (email: string, password: string) => {
       try {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        setUser(session?.user ?? null);
-        setLoading(false);
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
       } catch (error) {
-        console.error('Auth initialization error:', error);
-        setLoading(false);
+        logger.error('Sign in error', error);
+        throw error;
       }
-    };
-
-    initializeAuth();
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase.auth]);
-
-  const signIn = async (email: string, password: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) throw error;
-      setUser(data.user);
-    } catch (error) {
-      console.error('Auth error:', error);
-      throw error;
-    }
+    },
+    signOut: async () => {
+      try {
+        await supabase.auth.signOut();
+        router.push('/auth/login');
+      } catch (error) {
+        logger.error('Sign out error', error);
+        throw error;
+      }
+    },
   };
 
-  const signOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      setUser(null);
-    } catch (error) {
-      console.error('Sign out error:', error);
-      throw error;
-    }
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);

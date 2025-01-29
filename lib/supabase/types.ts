@@ -64,3 +64,21 @@ export type Database = {
     };
   };
 };
+
+export type Project = {
+  id: string;
+  name: string;
+  url_path: string;
+  avatar_url: string | null;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ProjectWithAgents = Project & {
+  agents: Agent[];
+};
+
+export type Agent = {
+  project_id: string;
+};

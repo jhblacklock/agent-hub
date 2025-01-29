@@ -1,0 +1,30 @@
+{
+  "deno.enablePaths": ["supabase/functions"],
+  "deno.enable": true,
+  "sql.format.keywordCase": "upper",
+  "deno.importMap": "./supabase/functions/import_map.json",
+  "deno.unstable": [
+    "bare-node-builtins",
+    "byonm",
+    "sloppy-imports",
+    "unsafe-proto",
+    "webgpu",
+    "broadcast-channel",
+    "worker-options",
+    "cron",
+    "kv",
+    "ffi",
+    "fs",
+    "http",
+    "net"
+  ],
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools"
+  },
+  "files.associations": {
+    "*.sql": "sql"
+  }
+}

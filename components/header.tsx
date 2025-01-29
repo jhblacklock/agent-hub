@@ -1,31 +1,26 @@
 import Link from 'next/link';
 import { ProfileDropdown } from './profile-dropdown';
+import { ProjectSwitcher } from '@/components/project-switcher';
+import { MainNav } from '@/components/main-nav';
 
 export function Header() {
   return (
-    <header className="flex h-16 items-center px-4 border-b bg-background md:px-6">
-      <div className="flex items-center gap-2 font-semibold">
-        <Link href="/" className="flex items-center gap-2 text-lg md:text-base">
-          <div className="h-6 w-6 rounded-full bg-gradient-to-br from-purple-400 to-pink-500" />
-          ILUI Labs
-        </Link>
-      </div>
-      <nav className="hidden md:flex flex-row items-center gap-5 text-sm lg:gap-6 mx-6">
-        <Link href="/" className="font-bold">
-          Overview
-        </Link>
-        <Link href="#" className="text-muted-foreground">
-          Activity
-        </Link>
-        <Link href="#" className="text-muted-foreground">
-          Usage
-        </Link>
-        <Link href="#" className="text-muted-foreground">
-          Settings
-        </Link>
-      </nav>
-      <div className="flex items-center gap-4 ml-auto">
-        <ProfileDropdown />
+    <header className="sticky top-0 z-50 w-full border-b bg-background">
+      <div className="flex h-14 items-center gap-4 px-4 sm:px-6">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="h-6 w-6 rounded-lg bg-foreground" />
+          </Link>
+          <span className="text-sm text-muted-foreground">/</span>
+          <div className="flex items-center gap-4">
+            <ProjectSwitcher />
+            <span className="text-sm text-muted-foreground">/</span>
+            <MainNav />
+          </div>
+        </div>
+        <div className="ml-auto flex items-center gap-4">
+          <ProfileDropdown />
+        </div>
       </div>
     </header>
   );

@@ -6,7 +6,7 @@ import { AgentSwitcher } from './agent-switcher';
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background">
+    <header className="sticky top-0 z-50 w-full border-b bg-background text-sm">
       <div className="flex h-14 items-center gap-4 px-4 sm:px-6">
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2">
@@ -16,9 +16,10 @@ export function Header() {
           <div className="flex items-center gap-4">
             <ProjectSwitcher />
             <AgentSwitcher />
+            <span className="text-sm text-muted-foreground">/</span>
+            <MainNav />
           </div>
         </div>
-        <MainNav />
         <div className="ml-auto flex items-center gap-4">
           <ProfileDropdown />
         </div>

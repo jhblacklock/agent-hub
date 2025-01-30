@@ -1,30 +1,47 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { PlusIcon } from '@radix-ui/react-icons';
+import { useEffect, useState } from 'react';
+import { useSupabase } from '@/lib/providers/supabase-provider';
+import { useProject } from '@/lib/providers/project-provider';
+import { Agent } from '@/lib/supabase/types';
+import { AgentList } from '@/components/agent-list';
 
 export default function ProjectPage() {
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Agents</h1>
-        <Button>
-          <PlusIcon className="h-4 w-4 mr-2" />
-          Create Agent
-        </Button>
+  const { supabase } = useSupabase();
+  const { currentProject } = useProject();
+  const [agents, setAgents] = useState<Agent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchAgents() {
+      if (!currentProject) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('agents')
+          .select('*')
+          .eq('project_id', currentProject.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+        setAgents(data || []);
+      } catch (error) {
+        console.error('Error fetching agents:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchAgents();
+  }, [currentProject, supabase]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900" />
       </div>
-      <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center animate-in fade-in-50">
-        <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">
-          <h3 className="mt-4 text-lg font-semibold">No agents yet</h3>
-          <p className="mb-4 mt-2 text-sm text-muted-foreground">
-            Get started by creating your first agent
-          </p>
-          <Button>
-            <PlusIcon className="h-4 w-4 mr-2" />
-            Create Agent
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
+
+  return <AgentList agents={agents} />;
 }

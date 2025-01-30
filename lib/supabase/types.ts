@@ -80,5 +80,22 @@ export type ProjectWithAgents = Project & {
 };
 
 export type Agent = {
+  id: string;
+  name: string;
+  description: string;
+  url_path: string;
   project_id: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
+};
+
+export type ApiKey = {
+  id: string;
+  key: string;
+  agent_id: string;
+  user_id: string;
+  created_at: string;
+  last_used_at: string | null;
+  revoked_at: string | null;
 };

@@ -18,8 +18,12 @@ create table agents (
   project_id uuid references projects(id) not null,
   user_id uuid references auth.users(id) not null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  url_path varchar(48) not null
 );
+
+-- Add constraint to agents table
+alter table agents add constraint unique_agent_url_path_per_project unique(project_id, url_path);
 
 -- Create RLS policies
 alter table projects enable row level security;

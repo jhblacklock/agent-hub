@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { ProfileDropdown } from './profile-dropdown';
 import { ProjectSwitcher } from '@/components/project-switcher';
 import { MainNav } from '@/components/main-nav';
+import { AgentSwitcher } from './agent-switcher';
 
 export function Header() {
   return (
@@ -14,10 +15,10 @@ export function Header() {
           <span className="text-sm text-muted-foreground">/</span>
           <div className="flex items-center gap-4">
             <ProjectSwitcher />
-            <span className="text-sm text-muted-foreground">/</span>
-            <MainNav />
+            <AgentSwitcher />
           </div>
         </div>
+        <MainNav />
         <div className="ml-auto flex items-center gap-4">
           <ProfileDropdown />
         </div>

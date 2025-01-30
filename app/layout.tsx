@@ -1,5 +1,7 @@
 import { Providers } from '@/components/providers';
 import './globals.css';
+import { AgentProvider } from '@/lib/providers/agent-provider';
+import { ProjectProvider } from '@/lib/providers/project-provider';
 
 export default function RootLayout({
   children,
@@ -9,7 +11,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <ProjectProvider>
+            <AgentProvider>{children}</AgentProvider>
+          </ProjectProvider>
+        </Providers>
       </body>
     </html>
   );

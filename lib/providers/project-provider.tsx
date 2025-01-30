@@ -48,12 +48,9 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
           return;
         }
 
-        logger.debug('Projects fetched', { count: existingProjects?.length });
-
         if (existingProjects?.length) {
           setProjects(existingProjects);
 
-          // Get project from URL
           const urlParts = pathname.split('/');
           const urlProjectPath = urlParts[1];
           const urlProject = existingProjects.find(
@@ -61,31 +58,30 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
           );
 
           if (urlProject) {
-            logger.info('Found matching project', { projectId: urlProject.id });
             setCurrentProject(urlProject);
             setIsLoading(false);
             return;
           }
 
-          // If we're not on an auth page and no matching project, redirect to first project
           if (!pathname.startsWith('/auth')) {
-            logger.info('Redirecting to first project', {
-              projectId: existingProjects[0].id,
-            });
             router.push(`/${existingProjects[0].url_path}`);
           }
           return;
         }
 
         // Create default project if none exist
+        const { data: userData } = await supabase.auth.getUser();
+        if (!userData.user) {
+          setIsLoading(false);
+          return;
+        }
+
         const defaultProject = {
-          name: `${session.user.email}'s projects`,
-          url_path: `${session.user.email.split('@')[0]}-projects`,
-          user_id: session.user.id,
+          name: `${userData.user.email}'s projects`,
+          url_path: `${userData.user.email?.split('@')[0]}-projects`,
+          user_id: userData.user.id,
           avatar_url: null,
         };
-
-        logger.info('Creating default project', defaultProject);
 
         const { data: newProject, error: insertError } = await supabase
           .from('projects')
@@ -100,7 +96,6 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (newProject) {
-          logger.info('Created new project', { projectId: newProject.id });
           setProjects([newProject]);
           setCurrentProject(newProject);
           if (!pathname.startsWith('/auth')) {

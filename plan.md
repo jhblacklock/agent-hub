@@ -72,6 +72,10 @@ Define the following structure for clarity and modularity:
 
 - Use Supabase session management to ensure secure API access by authorized users only.
 
+**API Tokens**
+
+- Implement a feature in the settings section under "API Tokens" where users can generate, view, and revoke API tokens for each agent. Each token should be unique to an agent and used to authenticate API requests securely.
+
 **Database Tables**
 
 1.  **Logs Table**:

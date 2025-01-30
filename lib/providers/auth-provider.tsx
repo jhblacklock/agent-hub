@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@supabase/supabase-js';
+import { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { useRouter, usePathname } from 'next/navigation';
 import { useSupabase } from './supabase-provider';
 import logger from '@/lib/utils/logger';
@@ -21,30 +21,58 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { supabase, session, isLoading: sessionLoading } = useSupabase();
+  const { supabase } = useSupabase();
   const router = useRouter();
   const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Handle initial auth check
   useEffect(() => {
-    if (sessionLoading) {
-      return;
-    }
+    const fetchUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error) {
+        logger.error('Error fetching user', error);
+        setLoading(false);
+        return;
+      }
+      setUser(data.user);
+      setLoading(false);
+    };
+    fetchUser();
+  }, [supabase.auth]);
 
-    if (!session && !pathname.startsWith('/auth')) {
-      logger.info('No session found, redirecting to login', { pathname });
-      router.push('/auth/login');
-      return;
-    }
+  // Handle auth state changes
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+        setUser(session?.user ?? null);
+      }
+    );
 
-    setUser(session?.user ?? null);
-    setLoading(false);
-  }, [session, sessionLoading, pathname, router]);
+    return () => subscription.unsubscribe();
+  }, [supabase.auth]);
+
+  // Handle navigation after auth state changes
+  useEffect(() => {
+    if (loading) return;
+
+    const shouldRedirect = async () => {
+      if (!user && !pathname.startsWith('/auth')) {
+        router.push('/auth/login');
+      } else if (user && pathname.startsWith('/auth')) {
+        router.push('/');
+      }
+    };
+
+    shouldRedirect();
+  }, [user, loading, pathname, router]);
 
   const value = {
     user,
-    loading: loading || sessionLoading,
+    loading,
     signIn: async (email: string, password: string) => {
       try {
         const { error } = await supabase.auth.signInWithPassword({
@@ -60,7 +88,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut: async () => {
       try {
         await supabase.auth.signOut();
-        router.push('/auth/login');
       } catch (error) {
         logger.error('Sign out error', error);
         throw error;

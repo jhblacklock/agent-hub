@@ -43,5 +43,12 @@ export default function ProjectPage() {
     );
   }
 
-  return <AgentList agents={agents} />;
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold">{currentProject?.name}</h1>
+      </div>
+      <AgentList agents={agents} />
+    </div>
+  );
 }

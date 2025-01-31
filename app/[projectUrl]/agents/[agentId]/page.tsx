@@ -5,12 +5,17 @@ import { useParams } from 'next/navigation';
 import { useSupabase } from '@/lib/providers/supabase-provider';
 import { Agent } from '@/lib/supabase/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useProject } from '@/lib/providers/project-provider';
+import { GearIcon } from '@radix-ui/react-icons';
 
 export default function AgentPage() {
   const { supabase } = useSupabase();
   const params = useParams();
   const [agent, setAgent] = useState<Agent | null>(null);
   const [loading, setLoading] = useState(true);
+  const { currentProject } = useProject();
 
   useEffect(() => {
     async function fetchAgent() {
@@ -45,8 +50,10 @@ export default function AgentPage() {
 
   return (
     <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">{agent.name}</h1>
+      </div>
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">{agent.name}</h1>
         <p className="text-muted-foreground">{agent.description}</p>
       </div>
 

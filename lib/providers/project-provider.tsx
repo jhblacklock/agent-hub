@@ -17,7 +17,9 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const { supabase, session, isLoading: sessionLoading } = useSupabase();
-  const [currentProject, setCurrentProject] = useState<Project | null>(null);
+  const [currentProject, setCurrentProjectState] = useState<Project | null>(
+    null
+  );
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -58,7 +60,7 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
           );
 
           if (urlProject) {
-            setCurrentProject(urlProject);
+            setCurrentProjectState(urlProject);
             setIsLoading(false);
             return;
           }
@@ -97,7 +99,7 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
 
         if (newProject) {
           setProjects([newProject]);
-          setCurrentProject(newProject);
+          setCurrentProjectState(newProject);
           if (!pathname.startsWith('/auth')) {
             router.push(`/${newProject.url_path}`);
           }
@@ -112,13 +114,18 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
     initializeProject();
   }, [session, sessionLoading, pathname, router, supabase]);
 
+  const setCurrentProject = (project: Project) => {
+    setCurrentProjectState(project);
+    // Only navigate if not in settings
+    if (!pathname.includes('/settings')) {
+      router.push(`/${project.url_path}`);
+    }
+  };
+
   const value = {
     currentProject,
     projects,
-    setCurrentProject: (project: Project) => {
-      setCurrentProject(project);
-      router.push(`/${project.url_path}`);
-    },
+    setCurrentProject,
     isLoading: isLoading || sessionLoading,
   };
 

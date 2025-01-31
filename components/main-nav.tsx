@@ -35,9 +35,9 @@ export function MainNav() {
           active: pathname === `/${currentProject?.url_path}`,
         },
         {
-          href: `/${currentProject?.url_path}/agents`,
+          href: `/${currentProject?.url_path}/settings`,
           label: 'Settings',
-          active: pathname === `/${currentProject?.url_path}/settings`,
+          active: pathname.includes(`/${currentProject?.url_path}/settings`),
         },
       ];
 

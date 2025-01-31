@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { SettingsLayout } from '@/components/settings-layout';
 import { SettingsFormSection } from '@/components/settings-form-section';
+import { generateCleanUrlPath } from '@/lib/utils/url';
 
 export default function ProjectSettingsPage() {
   const { currentProject, setCurrentProject } = useProject();
@@ -38,10 +39,6 @@ export default function ProjectSettingsPage() {
   useEffect(() => {
     if (!urlPath) {
       setUrlError('URL path is required');
-    } else if (!/^[a-z0-9-]+$/.test(urlPath)) {
-      setUrlError(
-        'URL path can only contain lowercase letters, numbers, and hyphens'
-      );
     } else {
       setUrlError('');
     }
@@ -80,15 +77,17 @@ export default function ProjectSettingsPage() {
 
     setUrlLoading(true);
     try {
+      const cleanUrlPath = generateCleanUrlPath(urlPath);
+
       const { error } = await supabase
         .from('projects')
-        .update({ url_path: urlPath })
+        .update({ url_path: cleanUrlPath })
         .eq('id', currentProject.id);
 
       if (error) throw error;
 
       toast.success('Project URL updated');
-      window.location.href = `/${urlPath}/settings`;
+      window.location.href = `/${cleanUrlPath}/settings`;
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error updating project URL');
@@ -148,7 +147,7 @@ export default function ProjectSettingsPage() {
                 </div>
                 <Input
                   value={urlPath}
-                  onChange={(e) => setUrlPath(e.target.value.toLowerCase())}
+                  onChange={(e) => setUrlPath(e.target.value)}
                   className="rounded-l-none"
                   placeholder="my-project"
                 />

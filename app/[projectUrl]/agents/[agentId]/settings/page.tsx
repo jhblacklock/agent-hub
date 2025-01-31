@@ -9,13 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { SettingsLayout } from '@/components/settings-layout';
 import { SettingsFormSection } from '@/components/settings-form-section';
-
-function generateUrlPath(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
+import { generateCleanUrlPath } from '@/lib/utils/url';
 
 export default function AgentSettingsPage() {
   const params = useParams();
@@ -71,10 +65,6 @@ export default function AgentSettingsPage() {
   useEffect(() => {
     if (!urlPath) {
       setUrlError('URL path is required');
-    } else if (!/^[a-z0-9-]+$/.test(urlPath)) {
-      setUrlError(
-        'URL path can only contain lowercase letters, numbers, and hyphens'
-      );
     } else {
       setUrlError('');
     }
@@ -136,15 +126,18 @@ export default function AgentSettingsPage() {
 
     setUrlLoading(true);
     try {
+      // Clean the URL path only on submission
+      const cleanUrlPath = generateCleanUrlPath(urlPath);
+
       const { error } = await supabase
         .from('agents')
-        .update({ url_path: urlPath })
+        .update({ url_path: cleanUrlPath })
         .eq('id', agent.id);
 
       if (error) throw error;
 
       toast.success('Agent URL updated');
-      window.location.href = `/${currentProject?.url_path}/agents/${urlPath}/settings`;
+      window.location.href = `/${currentProject?.url_path}/agents/${cleanUrlPath}/settings`;
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error updating agent URL');
@@ -197,7 +190,7 @@ export default function AgentSettingsPage() {
               </div>
               <Input
                 value={urlPath}
-                onChange={(e) => setUrlPath(e.target.value.toLowerCase())}
+                onChange={(e) => setUrlPath(e.target.value)}
                 className="rounded-l-none"
                 placeholder="my-agent"
               />

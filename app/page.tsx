@@ -25,7 +25,6 @@ export default async function HomePage() {
     redirect(`/${projects.url_path}`);
   }
 
-  // If no projects exist, redirect to username-projects
-  const username = session.user.email?.split('@')[0] ?? 'user';
-  redirect(`/${username}-projects`);
+  // If no projects exist, redirect to project creation page
+  redirect('/projects/new');
 }

@@ -8,10 +8,11 @@ interface SettingsFormSectionProps {
   title: string;
   description: string;
   children: React.ReactNode;
-  onSubmit: (e: React.FormEvent) => Promise<void>;
+  onSubmit: (e: React.FormEvent) => Promise<void> | void;
   loading?: boolean;
   error?: string;
   hint?: string;
+  submitText?: string;
 }
 
 export function SettingsFormSection({
@@ -22,6 +23,7 @@ export function SettingsFormSection({
   loading = false,
   error,
   hint,
+  submitText = 'Save',
 }: SettingsFormSectionProps) {
   return (
     <Card>
@@ -42,7 +44,7 @@ export function SettingsFormSection({
             <div className="flex items-center justify-between bg-muted/50 px-6 py-4">
               <p className="text-sm text-muted-foreground">{hint}</p>
               <Button type="submit" disabled={loading}>
-                {loading ? 'Saving...' : 'Save'}
+                {loading ? 'Saving...' : submitText}
               </Button>
             </div>
           </div>

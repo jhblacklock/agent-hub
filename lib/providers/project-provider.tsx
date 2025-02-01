@@ -4,7 +4,6 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { Project } from '@/lib/supabase/types';
 import { useSupabase } from './supabase-provider';
 import { useRouter, usePathname } from 'next/navigation';
-import logger from '@/lib/utils/logger';
 
 interface ProjectContextType {
   currentProject: Project | null;
@@ -17,9 +16,8 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 export function ProjectProvider({ children }: { children: React.ReactNode }) {
   const { supabase, session, isLoading: sessionLoading } = useSupabase();
-  const [currentProject, setCurrentProjectState] = useState<Project | null>(
-    null
-  );
+  const [currentProjectState, setCurrentProjectState] =
+    useState<Project | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -28,91 +26,58 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function initializeProject() {
       if (sessionLoading) {
+        console.log('Session is still loading...');
         return;
       }
 
       if (!session?.user) {
-        logger.info('No session, skipping project init', { userId: null });
         setIsLoading(false);
         return;
       }
 
       try {
-        logger.info('Fetching projects...', { userId: session.user.id });
-        const { data: existingProjects, error: fetchError } = await supabase
+        const { data: existingProjects, error } = await supabase
           .from('projects')
           .select('*')
+          .eq('user_id', session.user.id)
           .order('created_at', { ascending: false });
 
-        if (fetchError) {
-          logger.error('Error fetching projects', fetchError);
-          setIsLoading(false);
-          return;
-        }
+        if (error) throw error;
 
         if (existingProjects?.length) {
           setProjects(existingProjects);
 
-          const urlParts = pathname.split('/');
-          const urlProjectPath = urlParts[1];
-          const urlProject = existingProjects.find(
-            (p: Project) => p.url_path === urlProjectPath
+          const currentPath = pathname.split('/')[1];
+          const currentProject = existingProjects.find(
+            (project: { url_path: string }) => project.url_path === currentPath
           );
 
-          if (urlProject) {
-            setCurrentProjectState(urlProject);
-            setIsLoading(false);
-            return;
-          }
-
-          if (!pathname.startsWith('/auth')) {
+          if (!currentProject) {
+            console.log('Redirecting to:', `/${existingProjects[0].url_path}`);
+            setCurrentProjectState(existingProjects[0]);
             router.push(`/${existingProjects[0].url_path}`);
+          } else if (currentProject !== currentProjectState) {
+            setCurrentProjectState(currentProject);
           }
-          return;
-        }
-
-        // Create default project if none exist
-        const { data: userData } = await supabase.auth.getUser();
-        if (!userData.user) {
-          setIsLoading(false);
-          return;
-        }
-
-        const defaultProject = {
-          name: `${userData.user.email}'s projects`,
-          url_path: `${userData.user.email?.split('@')[0]}-projects`,
-          user_id: userData.user.id,
-          avatar_url: null,
-        };
-
-        const { data: newProject, error: insertError } = await supabase
-          .from('projects')
-          .insert(defaultProject)
-          .select()
-          .single();
-
-        if (insertError) {
-          logger.error('Error creating project', insertError);
-          setIsLoading(false);
-          return;
-        }
-
-        if (newProject) {
-          setProjects([newProject]);
-          setCurrentProjectState(newProject);
-          if (!pathname.startsWith('/auth')) {
-            router.push(`/${newProject.url_path}`);
-          }
+        } else {
+          console.log('No projects found for user');
         }
       } catch (error) {
-        logger.error('Error in project initialization', error);
+        console.error('Error fetching projects:', error);
+      } finally {
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     }
 
     initializeProject();
-  }, [session, sessionLoading, pathname, router, supabase]);
+  }, [
+    session,
+    sessionLoading,
+    pathname,
+    router,
+    supabase,
+    currentProjectState,
+  ]);
 
   const setCurrentProject = (project: Project) => {
     setCurrentProjectState(project);
@@ -123,7 +88,7 @@ export function ProjectProvider({ children }: { children: React.ReactNode }) {
   };
 
   const value = {
-    currentProject,
+    currentProject: currentProjectState,
     projects,
     setCurrentProject,
     isLoading: isLoading || sessionLoading,

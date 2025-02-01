@@ -8,22 +8,22 @@ import { randomBytes, createHash } from 'crypto';
 export function generateToken(): string {
   // Get current timestamp
   const timestamp = Date.now().toString(36);
-  
+
   // Generate random bytes
   const random = randomBytes(18)
     .toString('base64')
     .replace(/[^a-zA-Z0-9]/g, '')
     .substring(0, 12);
-  
+
   // Create base token
   const baseToken = `agt_${timestamp}_${random}`;
-  
+
   // Generate checksum
   const checksum = createHash('sha256')
     .update(baseToken)
     .digest('hex')
     .substring(0, 16);
-  
+
   // Combine all parts
   return `${baseToken}_${checksum}`;
 }
@@ -34,20 +34,20 @@ export function generateToken(): string {
 export function validateToken(token: string): boolean {
   // Check basic format
   if (!token.startsWith('agt_')) return false;
-  
+
   // Split token parts
   const parts = token.split('_');
   if (parts.length !== 4) return false;
-  
+
   // Reconstruct base token
   const baseToken = parts.slice(0, 3).join('_');
-  
+
   // Verify checksum
   const checksum = createHash('sha256')
     .update(baseToken)
     .digest('hex')
     .substring(0, 16);
-  
+
   return checksum === parts[3];
 }
 
@@ -61,4 +61,4 @@ export function getTokenTimestamp(token: string): Date | null {
   } catch {
     return null;
   }
-} 
+}

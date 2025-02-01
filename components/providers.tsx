@@ -4,6 +4,8 @@ import { ThemeProvider } from 'next-themes';
 import { SupabaseProvider } from '@/lib/providers/supabase-provider';
 import { AuthProvider } from '@/lib/providers/auth-provider';
 import { ProjectProvider } from '@/lib/providers/project-provider';
+import { AgentProvider } from '@/lib/providers/agent-provider';
+
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
@@ -14,7 +16,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     >
       <SupabaseProvider>
         <AuthProvider>
-          <ProjectProvider>{children}</ProjectProvider>
+          <ProjectProvider>
+            <AgentProvider>{children}</AgentProvider>
+          </ProjectProvider>
         </AuthProvider>
       </SupabaseProvider>
     </ThemeProvider>

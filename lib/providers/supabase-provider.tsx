@@ -1,21 +1,10 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import { Database } from '@/lib/supabase/types';
+import { createClient } from '@/lib/supabase/client';
 
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  {
-    auth: {
-      persistSession: true,
-      autoRefreshToken: true,
-    },
-  }
-);
-
+const supabase = createClient();
 const Context = createContext<any>(undefined);
 
 export function SupabaseProvider({ children }: { children: React.ReactNode }) {
@@ -25,15 +14,19 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Get initial session
+    console.log('supabaseProvider: getting initial session');
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('supabaseProvider: got initial session', session);
       setSession(session);
       setIsLoading(false);
     });
+    console.log('supabaseProvider: initial session', session);
 
     // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('supabaseProvider: auth state changed', session);
       setSession(session);
       router.refresh();
     });

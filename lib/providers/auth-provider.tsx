@@ -62,8 +62,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const shouldRedirect = async () => {
       if (!user && !pathname.startsWith('/auth')) {
         router.push('/auth/login');
-      } else if (user && pathname.startsWith('/auth')) {
-        router.push('/');
       }
     };
 

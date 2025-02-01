@@ -18,7 +18,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 import { generateToken } from '@/lib/utils/token';
 import { Input } from '@/components/ui/input';
 
@@ -187,11 +187,13 @@ export default function AgentApiSettingsPage() {
                         </Button>
                       </div>
                       <p className="text-sm text-muted-foreground">
-                        Created {new Date(token.created_at).toLocaleDateString()}
+                        Created{' '}
+                        {new Date(token.created_at).toLocaleDateString()}
                       </p>
                       {token.last_used_at && (
                         <p className="text-sm text-muted-foreground">
-                          Last used {new Date(token.last_used_at).toLocaleDateString()}
+                          Last used{' '}
+                          {new Date(token.last_used_at).toLocaleDateString()}
                         </p>
                       )}
                     </div>
@@ -201,12 +203,16 @@ export default function AgentApiSettingsPage() {
             </div>
           </SettingsFormSection>
 
-          <AlertDialog open={showRegenerateAlert} onOpenChange={setShowRegenerateAlert}>
+          <AlertDialog
+            open={showRegenerateAlert}
+            onOpenChange={setShowRegenerateAlert}
+          >
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Regenerate API Token?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will invalidate the existing token. All clients using the old token will need to be updated with the new one.
+                  This will invalidate the existing token. All clients using the
+                  old token will need to be updated with the new one.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -225,4 +231,4 @@ export default function AgentApiSettingsPage() {
       )}
     </SettingsLayout>
   );
-} 
+}

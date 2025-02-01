@@ -115,7 +115,8 @@ export default function AgentApiSettingsPage() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast.success('Token copied to clipboard');
-    } catch (err) {
+    } catch (error) {
+      console.error('Error copying token:', error);
       toast.error('Failed to copy token');
     }
   };

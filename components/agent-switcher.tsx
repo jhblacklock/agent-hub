@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
+import { CaretSortIcon, CheckIcon, PlusIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAgent } from '@/lib/providers/agent-provider';
@@ -14,17 +14,24 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
 } from '@/components/ui/command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { CreateAgentModal } from '@/components/create-agent-modal';
 
 export function AgentSwitcher() {
   const { currentProject } = useProject();
   const { currentAgent, agents } = useAgent();
   const [open, setOpen] = useState(false);
+  const [showNewAgentModal, setShowNewAgentModal] = useState(false);
+  const handleCreateAgent = () => {
+    setOpen(false);
+    setShowNewAgentModal(true);
+  };
 
   if (!currentAgent) {
     return null;
@@ -79,11 +86,22 @@ export function AgentSwitcher() {
                     </CommandItem>
                   ))}
                 </CommandGroup>
+                <CommandSeparator />
+                <CommandGroup>
+                  <CommandItem onSelect={handleCreateAgent} className="text-sm">
+                    <PlusIcon className="mr-2 h-4 w-4" />
+                    Create Agent
+                  </CommandItem>
+                </CommandGroup>
               </CommandList>
             </Command>
           </PopoverContent>
         </Popover>
       </div>
+      <CreateAgentModal
+        open={showNewAgentModal}
+        onOpenChange={setShowNewAgentModal}
+      />
     </>
   );
 }

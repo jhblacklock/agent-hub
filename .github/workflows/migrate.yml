@@ -10,26 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16' # Use the Node.js version compatible with your project
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Use the Node.js version compatible with your project
 
-    - name: Install dependencies
-      run: npm install supabase
+      - name: Install dependencies
+        run: npm install supabase
 
-    - name: Set up environment variables
-      env:
-        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-        SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-        SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-      run: echo "Environment variables set"
+      - name: Set up environment variables
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: echo "Environment variables set"
 
-    - name: Link Supabase project
-      run: npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
+      - name: Link Supabase project
+        run: npx supabase link --project-ref owxbrxmmqjofrdawgqpa
 
-    - name: Run Supabase migrations
-      run: npx supabase db push
+      - name: Run Supabase migrations
+        run: npx supabase db push

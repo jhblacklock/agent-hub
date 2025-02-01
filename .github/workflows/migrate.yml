@@ -29,7 +29,7 @@ jobs:
       run: echo "Environment variables set"
 
     - name: Link Supabase project
-      run: npx supabase link --project-ref $PRODUCTION_PROJECT_ID
+      run: npx supabase link --project-ref ${{ env.PRODUCTION_PROJECT_ID }}
 
     - name: Run Supabase migrations
       run: npx supabase db push

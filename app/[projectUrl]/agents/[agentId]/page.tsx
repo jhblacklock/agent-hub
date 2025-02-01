@@ -8,7 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useProject } from '@/lib/providers/project-provider';
-import { GearIcon } from '@radix-ui/react-icons';
 
 export default function AgentPage() {
   const { supabase } = useSupabase();

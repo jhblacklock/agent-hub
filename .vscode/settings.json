@@ -1,7 +1,6 @@
 {
   "deno.enablePaths": ["supabase/functions"],
   "deno.enable": true,
-  "sql.format.keywordCase": "upper",
   "deno.importMap": "./supabase/functions/import_map.json",
   "deno.unstable": [
     "bare-node-builtins",
@@ -19,12 +18,30 @@
     "net"
   ],
   "[typescript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[sql]": {
     "editor.defaultFormatter": "mtxr.sqltools"
   },
   "files.associations": {
     "*.sql": "sql"
+  },
+  "editor.defaultFormatter": "vscode.typescript-language-features",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.organizeImports": "always"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }

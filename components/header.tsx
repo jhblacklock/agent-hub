@@ -1,18 +1,16 @@
-import Link from 'next/link';
-import { ProfileDropdown } from './profile-dropdown';
-import { ProjectSwitcher } from '@/components/project-switcher';
 import { MainNav } from '@/components/main-nav';
-import { AgentSwitcher } from './agent-switcher';
-import { useProject } from '@/lib/providers/project-provider';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
-import { PlusIcon } from '@radix-ui/react-icons';
-import { useState } from 'react';
 import { NewProjectModal } from '@/components/new-project-modal';
+import { ProjectSwitcher } from '@/components/project-switcher';
+import { Button } from '@/components/ui/button';
+import { useProject } from '@/lib/providers/project-provider';
+import { PlusIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
+import { useState } from 'react';
+import { AgentSwitcher } from './agent-switcher';
+import { ProfileDropdown } from './profile-dropdown';
 
 export function Header() {
   const { projects } = useProject();
-  const router = useRouter();
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
 
   return (

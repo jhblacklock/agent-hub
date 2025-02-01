@@ -1,20 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSupabase } from '@/lib/providers/supabase-provider';
 import { Agent } from '@/lib/supabase/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { useProject } from '@/lib/providers/project-provider';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function AgentPage() {
   const { supabase } = useSupabase();
   const params = useParams();
   const [agent, setAgent] = useState<Agent | null>(null);
   const [loading, setLoading] = useState(true);
-  const { currentProject } = useProject();
 
   useEffect(() => {
     async function fetchAgent() {

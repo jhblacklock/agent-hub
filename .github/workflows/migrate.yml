@@ -8,6 +8,7 @@ on:
 jobs:
   migrate:
     runs-on: ubuntu-latest
+    environment: production
 
     steps:
     - name: Checkout repository
@@ -25,11 +26,10 @@ jobs:
       env:
         SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
         SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        PRODUCTION_PROJECT_ID: owxbrxmmqjofrdawgqpa
       run: echo "Environment variables set"
 
     - name: Link Supabase project
-      run: npx supabase link --project-ref ${{ env.PRODUCTION_PROJECT_ID }}
+      run: npx supabase link --project-ref ${{ env.SUPABASE_PROJECT_REF }}
 
     - name: Run Supabase migrations
       run: npx supabase db push

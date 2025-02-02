@@ -14,7 +14,7 @@
     "type-check": "tsc --noEmit",
     "fix:all": "npm run format && npm run lint:fix && npm run type-check",
     "prepare": "husky",
-    "migrate": "npm run link && supabase db push --password $SUPABASE_DB_PASSWORD",
+    "migrate": "npm run link && supabase db push --password $POSTGRES_PASSWORD",
     "link": "supabase link --project-ref $SUPABASE_PROJECT_REF"
   },
   "dependencies": {

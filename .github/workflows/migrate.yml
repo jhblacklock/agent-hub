@@ -11,25 +11,25 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '16' 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
 
-    - name: Install dependencies
-      run: npm install supabase
+      - name: Install dependencies
+        run: npm install supabase
 
-    - name: Set up environment variables
-      env:
-        SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-        SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-      run: echo "Environment variables set"
+      - name: Set up environment variables
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+        run: echo "Environment variables set"
 
-    - name: Link Supabase project
-      run: npx supabase link --project-ref ${{ env.SUPABASE_PROJECT_REF }}
+      - name: Link Supabase project
+        run: npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
 
-    - name: Run Supabase migrations
-      run: npx supabase db push
+      - name: Run Supabase migrations
+        run: npx supabase db push

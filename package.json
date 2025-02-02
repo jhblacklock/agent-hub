@@ -15,7 +15,7 @@
     "fix:all": "npm run format && npm run lint:fix && npm run type-check",
     "prepare": "husky",
     "migrate": "supabase db push --password $POSTGRES_PASSWORD",
-    "link": "echo $POSTGRES_PASSWORD | supabase link --project-ref $SUPABASE_PROJECT_REF"
+    "link": "SUPABASE_ACCESS_TOKEN=$SUPABASE_ACCESS_TOKEN supabase link --project-ref $SUPABASE_PROJECT_REF"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

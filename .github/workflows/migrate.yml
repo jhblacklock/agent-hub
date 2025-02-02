@@ -32,4 +32,4 @@ jobs:
         run: SUPABASE_ACCESS_TOKEN=${{ secrets.SUPABASE_ACCESS_TOKEN }} npx supabase link --project-ref ${{ secrets.SUPABASE_PROJECT_REF }}
 
       - name: Run Supabase migrations
-        run: npx supabase db push
+        run: npx supabase db push --password ${{ secrets.SUPABASE_DB_PASSWORD }}

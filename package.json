@@ -5,7 +5,7 @@
   "scripts": {
     "docker:start": "./scripts/start-docker.sh",
     "dev": "npm run docker:start && next dev",
-    "build": "next build",
+    "build": "npm run migrate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -13,7 +13,9 @@
     "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
     "fix:all": "npm run format && npm run lint:fix && npm run type-check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "migrate": "npm run link && supabase db push --password $SUPABASE_DB_PASSWORD",
+    "link": "supabase link --project-ref $SUPABASE_PROJECT_REF"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

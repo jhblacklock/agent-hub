@@ -14,8 +14,7 @@
     "type-check": "tsc --noEmit",
     "fix:all": "npm run format && npm run lint:fix && npm run type-check",
     "prepare": "husky",
-    "migrate": "supabase db push --db-url $POSTGRES_URL",
-    "link": "echo $POSTGRES_PASSWORD | supabase link --project-ref $SUPABASE_PROJECT_REF"
+    "migrate": "supabase db push --db-url $POSTGRES_URL"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

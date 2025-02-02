@@ -5,7 +5,7 @@
   "scripts": {
     "docker:start": "./scripts/start-docker.sh",
     "dev": "npm run docker:start && next dev",
-    "build": "npm run link && npm run migrate && next build",
+    "build": "npm run migrate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -15,7 +15,7 @@
     "fix:all": "npm run format && npm run lint:fix && npm run type-check",
     "prepare": "husky",
     "migrate": "supabase db push --password $POSTGRES_PASSWORD",
-    "link": "SUPABASE_ACCESS_TOKEN=$SUPABASE_ACCESS_TOKEN supabase link --project-ref $SUPABASE_PROJECT_REF"
+    "link": "echo $POSTGRES_PASSWORD | supabase link --project-ref $SUPABASE_PROJECT_REF"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
